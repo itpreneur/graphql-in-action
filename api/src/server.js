@@ -2,13 +2,15 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import morgan from 'morgan';
-
 import { graphqlHTTP } from 'express-graphql';
+
 import { schema } from './schema';
+import pgClient from './db/pg-client';
 
 import * as config from './config';
 
 async function main() {
+  const { pgPool } = await pgClient();
   const server = express();
   server.use(cors());
   server.use(morgan('dev'));
@@ -20,6 +22,7 @@ async function main() {
     '/',
     graphqlHTTP({
       schema,
+      context: { pgPool },
       graphiql: true,
     }),
   );
