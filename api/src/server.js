@@ -4,7 +4,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 
 import { graphqlHTTP } from 'express-graphql';
-import { schema, rootValue } from './schema/index.js';
+import { schema } from './schema';
 
 import * as config from './config';
 
@@ -20,7 +20,6 @@ async function main() {
     '/',
     graphqlHTTP({
       schema,
-      rootValue,
       graphiql: true,
     }),
   );
