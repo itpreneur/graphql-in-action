@@ -7,7 +7,6 @@ import {
   GraphQLList,
 } from 'graphql';
 
-import { extractPrefixedColumns } from '../../utils';
 import User from './user';
 
 const Task = new GraphQLObjectType({
@@ -34,8 +33,8 @@ const Task = new GraphQLObjectType({
     },
     author: {
       type: new GraphQLNonNull(User),
-      resolve: (prefixedObject) =>
-        extractPrefixedColumns({ prefixedObject, prefix: 'author' }),
+      resolve: (source, args, { pgApi }) =>
+        pgApi.userInfo(source.userId),
     },
   },
 });
