@@ -18,6 +18,13 @@ const pgApiWrapper = async () => {
       });
       return pgResp.rows[0];
     },
+
+    approachList: async (taskId) => {
+      const pgResp = await pgQuery(sqls.approachesForTaskIds, {
+        $1: [taskId],
+      });
+      return pgResp.rows;
+    },
   };
 };
 
