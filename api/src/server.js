@@ -7,11 +7,14 @@ import DataLoader from 'dataloader';
 
 import { schema } from './schema';
 import pgApiWrapper from './db/pg-api';
+import mongoApiWrapper from './db/mongo-api';
 
 import * as config from './config';
 
 async function main() {
   const pgApi = await pgApiWrapper();
+  const mongoApi = await mongoApiWrapper();
+
   const server = express();
   server.use(cors());
   server.use(morgan('dev'));
@@ -31,6 +34,9 @@ async function main() {
       ),
       searchResults: new DataLoader(async (searchTerms) =>
         pgApi.searchResults(searchTerms),
+      ),
+      detailLists: new DataLoader((approachIds) =>
+        mongoApi.detailLists(approachIds),
       ),
     };
     graphqlHTTP({
