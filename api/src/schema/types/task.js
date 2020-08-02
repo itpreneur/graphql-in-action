@@ -7,11 +7,13 @@ import {
   GraphQLList,
 } from 'graphql';
 
+import SearchResultItem from './search-result-item';
 import User from './user';
 import Approach from './approach';
 
 const Task = new GraphQLObjectType({
   name: 'Task',
+  interfaces: () => [SearchResultItem],
   fields: () => ({
     id: {
       type: new GraphQLNonNull(GraphQLID),

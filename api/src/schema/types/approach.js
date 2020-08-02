@@ -6,11 +6,13 @@ import {
   GraphQLNonNull,
 } from 'graphql';
 
+import SearchResultItem from './search-result-item';
 import User from './user';
 import Task from './task';
 
 const Approach = new GraphQLObjectType({
   name: 'Approach',
+  interfaces: () => [SearchResultItem],
   fields: () => ({
     id: { type: new GraphQLNonNull(GraphQLID) },
     content: { type: new GraphQLNonNull(GraphQLString) },
