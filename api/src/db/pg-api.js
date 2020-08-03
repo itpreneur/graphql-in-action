@@ -29,6 +29,16 @@ const pgApiWrapper = async () => {
         pgResp.rows.filter((row) => taskId === row.taskId),
       );
     },
+
+    tasksInfo: async (taskIds) => {
+      const pgResp = await pgQuery(sqls.tasksFromIds, {
+        $1: taskIds,
+        $2: null, // TODO: pass logged-in userId here.
+      });
+      return taskIds.map((taskId) =>
+        pgResp.rows.find((row) => taskId == row.id),
+      );
+    },
   };
 };
 
