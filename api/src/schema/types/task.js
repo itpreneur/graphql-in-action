@@ -12,7 +12,7 @@ import Approach from './approach';
 
 const Task = new GraphQLObjectType({
   name: 'Task',
-  fields: {
+  fields: () => ({
     id: {
       type: new GraphQLNonNull(GraphQLID),
     },
@@ -44,7 +44,7 @@ const Task = new GraphQLObjectType({
       resolve: (source, args, { loaders }) =>
         loaders.approachLists.load(source.id),
     },
-  },
+  }),
 });
 
 export default Task;

@@ -7,7 +7,7 @@ import {
 
 const User = new GraphQLObjectType({
   name: 'User',
-  fields: {
+  fields: () => ({
     id: { type: new GraphQLNonNull(GraphQLID) },
     username: { type: GraphQLString },
     name: {
@@ -15,7 +15,7 @@ const User = new GraphQLObjectType({
       resolve: ({ firstName, lastName }) =>
         [firstName, lastName].filter(Boolean).join(' '),
     },
-  },
+  }),
 });
 
 export default User;
