@@ -67,6 +67,14 @@ const pgApiWrapper = async () => {
       });
       return Promise.all(results);
     },
+    tasksForUsers: async (userIds) => {
+      const pgResp = await pgQuery(sqls.tasksForUsers, {
+        $1: userIds,
+      });
+      return userIds.map((userId) =>
+        pgResp.rows.filter((row) => userId === row.userId),
+      );
+    },
 
     mutators: {
       userCreate: async ({ input }) => {
