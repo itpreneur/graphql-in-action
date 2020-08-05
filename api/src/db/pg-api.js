@@ -180,12 +180,28 @@ const pgApiWrapper = async () => {
           });
           if (pgResp.rows[0]) {
             payload.approach = pgResp.rows[0];
-
+            await pgQuery(sqls.approachCountIncrement, {
+              $1: taskId,
+            });
             await mutators.approachDetailCreate(
               payload.approach.id,
               input.detailList,
             );
           }
+        }
+
+        return payload;
+      },
+
+      approachVote: async ({ approachId, input }) => {
+        const payload = { errors: [] };
+        const pgResp = await pgQuery(sqls.approachVote, {
+          $1: approachId,
+          $2: input.up ? 1 : -1,
+        });
+
+        if (pgResp.rows[0]) {
+          payload.approach = pgResp.rows[0];
         }
 
         return payload;
