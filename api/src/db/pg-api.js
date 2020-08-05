@@ -206,6 +206,28 @@ const pgApiWrapper = async () => {
 
         return payload;
       },
+
+      userDelete: async ({ currentUser }) => {
+        const payload = { errors: [] };
+        if (!currentUser) {
+          payload.errors.push({
+            message: 'A valid access token is required',
+          });
+          return payload;
+        }
+        try {
+          await pgQuery(sqls.userDelete, {
+            $1: currentUser.id,
+          });
+          payload.deletedUserId = currentUser.id;
+        } catch (err) {
+          payload.errors.push({
+            message: 'We were not able to delete this account',
+          });
+        }
+
+        return payload;
+      },
     },
   };
 };
