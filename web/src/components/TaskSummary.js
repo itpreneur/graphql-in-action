@@ -1,8 +1,9 @@
 import React from 'react';
+import { gql } from '@apollo/client';
 
 import { useStore } from '../store';
 
-export const TASK_SUMMARY_FRAGMENT = `
+export const TASK_SUMMARY_FRAGMENT = gql`
   fragment TaskSummary on Task {
     content
     author {
@@ -12,11 +13,15 @@ export const TASK_SUMMARY_FRAGMENT = `
   }
 `;
 
-export default function TaskSummary({ task, link = false }) {
+export default function TaskSummary({
+  task,
+  link = false,
+  isHighlighted = false,
+}) {
   const { AppLink } = useStore();
 
   return (
-    <div className="box box-primary">
+    <div className={`box box-primary highlighted-${isHighlighted}`}>
       {link ? (
         <AppLink to="TaskPage" taskId={task.id}>
           {task.content}
