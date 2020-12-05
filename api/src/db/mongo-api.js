@@ -59,6 +59,10 @@ const mongoApiWrapper = async () => {
         return approachDetails;
       });
     },
+
+    mutators: {
+
+    },
   };
 };
 
