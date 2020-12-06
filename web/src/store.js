@@ -9,6 +9,8 @@ import {
   InMemoryCache,
 } from '@apollo/client';
 
+import { setContext } from '@apollo/link-context';
+
 const httpLink = new HttpLink({ uri: config.GRAPHQL_SERVER_URL });
 const cache = new InMemoryCache();
 const client = new ApolloClient({ link: httpLink, cache });
@@ -45,6 +47,10 @@ export const useStoreObject = () => {
     setState((currentState) => {
       return { ...currentState, ...newState };
     });
+    // Reset cache when users login/logout
+    if (newState.user || newState.user === null) {
+      client.resetStore();
+    }
   };
 
   // This is a component that can be used in place of
@@ -64,6 +70,19 @@ export const useStoreObject = () => {
       </a>
     );
   };
+
+  const authLink = setContext((_, { headers }) => {
+    return {
+      headers: {
+        ...headers,
+        authorization: state.user
+          ? `Bearer ${state.user.authToken}`
+          : '',
+      },
+    };
+  });
+
+  client.setLink(authLink.concat(httpLink));
 
   const query = async (query, { variables } = {}) => {
     const resp = await client.query({ query, variables });
