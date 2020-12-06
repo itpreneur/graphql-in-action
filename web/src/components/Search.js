@@ -2,9 +2,22 @@ import React, { useState, useEffect } from 'react';
 
 import { useStore } from '../store';
 
-/** GIA NOTES
- * Define GraphQL operations here...
- */
+const SEARCH_RESULTS = `
+  query searchResults($searchTerm: String!) {
+    searchResults: search(term: $searchTerm) {
+      type: __typename
+      content
+      ... on Task {
+        approachCount
+      }
+      ... on Approach {
+        task {
+          content
+        }
+      }
+    }
+  }
+`;
 
 export default function Search({ searchTerm = null }) {
   const { setLocalAppState, request, AppLink } = useStore();
@@ -21,17 +34,11 @@ export default function Search({ searchTerm = null }) {
 
   useEffect(() => {
     if (searchTerm) {
-      /** GIA NOTES
-       *
-       * 1) Invoke the query for search:
-       *   - Variable `searchTerm` holds the search input value
-       *   (You can't use `await` here but `promise.then` is okay)
-       *
-       * 2) Change the setSearchResults call below to use the returned data:
-       *
-       */
-
-      setSearchResults([]); // TODO: Replace empty array with API_RESP_FOR_searchResults
+      request(SEARCH_RESULTS, { variables: { searchTerm } }).then(
+        ({ data }) => {
+          setSearchResults(data.searchResults);
+        },
+      );
     }
   }, [searchTerm, request]);
 
