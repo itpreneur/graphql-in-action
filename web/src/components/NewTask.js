@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import { gql } from '@apollo/client';
 
 import { useStore } from '../store';
 import Errors from './Errors';
 import { FULL_TASK_FRAGMENT } from './TaskPage';
 
-const TASK_CREATE = `
+const TASK_CREATE = gql`
   mutation taskCreate($input: TaskInput!) {
     taskCreate(input: $input) {
       errors {
@@ -23,7 +24,7 @@ export default function NewTask() {
   const {
     useLocalAppState,
     setLocalAppState,
-    request,
+    mutate,
     AppLink,
   } = useStore();
   const [uiErrors, setUIErrors] = useState([]);
@@ -44,7 +45,7 @@ export default function NewTask() {
     event.preventDefault();
     const input = event.target.elements;
     const { data, errors: rootErrors } =
-      await request(TASK_CREATE, {
+      await mutate(TASK_CREATE, {
         variables: {
           input: {
             content: input.content.value,

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { gql } from '@apollo/client';
 
 import { useStore } from '../store';
 import NewApproach from './NewApproach';
 import Approach, { APPROACH_FRAGMENT } from './Approach';
 import TaskSummary, { TASK_SUMMARY_FRAGMENT } from './TaskSummary';
 
-export const FULL_TASK_FRAGMENT = `
+export const FULL_TASK_FRAGMENT = gql`
   fragment FullTaskData on Task {
     id
     ...TaskSummary
@@ -18,7 +19,7 @@ export const FULL_TASK_FRAGMENT = `
   ${APPROACH_FRAGMENT}
 `;
 
-const TASK_INFO = `
+const TASK_INFO = gql`
   query taskInfo($taskId: ID!) {
     taskInfo(id: $taskId) {
       ...FullTaskData
@@ -29,7 +30,7 @@ const TASK_INFO = `
 
 
 export default function TaskPage({ taskId }) {
-  const { request, AppLink } = useStore();
+  const { query, AppLink } = useStore();
   const [taskInfo, setTaskInfo] = useState(null);
   const [showAddApproach, setShowAddApproach] = useState(false);
   const [
@@ -39,13 +40,13 @@ export default function TaskPage({ taskId }) {
 
   useEffect(() => {
     if (!taskInfo) {
-      request(TASK_INFO, { variables: { taskId } }).then(
+      query(TASK_INFO, { variables: { taskId } }).then(
         ({ data }) => {
           setTaskInfo(data.taskInfo);
         },
       );
     }
-  }, [taskId, taskInfo, request]);
+  }, [taskId, taskInfo, query]);
 
   if (!taskInfo) {
     return <div className="loading">Loading...</div>;
