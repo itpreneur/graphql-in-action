@@ -9,6 +9,7 @@
     "start-blank-dbs": "docker-compose -f dev-dbs/docker-blank.yml up"
   },
   "dependencies": {
+    "@apollo/client": "^3.3.4",
     "cors": "^2.8.5",
     "cross-env": "^7.0.2",
     "cross-fetch": "^3.0.6",
@@ -33,6 +34,6 @@
     "rimraf": "^3.0.2"
   },
   "browserslist": [
-    "> 0.5%, last 2 versions, not dead"
+    "since 2017-06"
   ]
 }
