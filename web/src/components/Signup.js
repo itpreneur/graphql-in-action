@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { gql } from '@apollo/client';
+import { useMutation, gql } from '@apollo/client';
 
 import { useStore } from '../store';
 import Errors from './Errors';
@@ -20,25 +20,30 @@ const USER_CREATE = gql`
 `;
 
 export default function Signup() {
-  const { mutate, setLocalAppState } = useStore();
-  const [uiErrors, setUIErrors] = useState();
+  const { setLocalAppState } = useStore();
+  const [ uiErrors, setUIErrors ] = useState();
+  const [ createUser, { error, loading } ] = useMutation(USER_CREATE);
+
+  if (error) {
+    return <div className="error">{error.message}</div>;
+  }
+
   const handleSignup = async (event) => {
     event.preventDefault();
     const input = event.target.elements;
     if (input.password.value !== input.confirmPassword.value) {
       return setUIErrors([{ message: 'Password mismatch' }]);
     }
-    const { data, errors: rootErrors } =
-      await mutate(USER_CREATE, {
-        variables: {
-          input: {
-            firstName: input.firstName.value,
-            lastName: input.lastName.value,
-            username: input.username.value,
-            password: input.password.value,
-          },
+    const { data, errors: rootErrors } = await createUser({
+      variables: {
+        input: {
+          firstName: input.firstName.value,
+          lastName: input.lastName.value,
+          username: input.username.value,
+          password: input.password.value,
         },
-      });
+      },
+    });
     if (rootErrors) {
       return setUIErrors(rootErrors);
     }
@@ -95,7 +100,11 @@ export default function Signup() {
         </div>
         <Errors errors={uiErrors} />
         <div className="spaced">
-          <button className="btn btn-primary" type="submit">
+          <button
+            className="btn btn-primary"
+            type="submit"
+            disabled={loading}
+          >
             Signup
           </button>
         </div>
