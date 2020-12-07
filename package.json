@@ -11,6 +11,7 @@
   "dependencies": {
     "@apollo/client": "^3.3.4",
     "@apollo/link-context": "^2.0.0-beta.3",
+    "apollo-server": "^2.19.0",
     "cors": "^2.8.5",
     "cross-env": "^7.0.2",
     "cross-fetch": "^3.0.6",
